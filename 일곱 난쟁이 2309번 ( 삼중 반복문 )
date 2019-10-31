@@ -1,0 +1,33 @@
+//일곱 난쟁이 2309번 ( 삼중 반복문 )
+#include<iostream>
+#include<algorithm>
+using namespace std;
+bool flag = false;
+int arr[9];
+int get(){
+	int total=0;
+	for(int i=0;i<9;i++){
+		cin>>arr[i];
+	
+		total += arr[i];
+	}
+	sort(arr,arr+9);
+	return total;
+}
+
+int main(){
+	int total = get();
+	for(int i=0;i<8;i++){
+		for(int j=i+1; j<9;j++){
+			if(total -arr[i]-arr[j]==100){
+				for(int s =0;s<9;s++){
+					if(s == i || s==j)continue;
+					cout<<arr[s]<<"\n";
+				}
+				return 0;
+			}
+		}
+	}
+}
+
+
