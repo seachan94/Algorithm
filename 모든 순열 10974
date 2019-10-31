@@ -1,0 +1,35 @@
+//백준 10974 모든 순열 cpp 알고리즘
+#include<iostream>
+using namespace std;
+
+int vst[9];
+int map[9];
+int n;
+
+void get(){
+	cin>>n;
+}
+
+void dfs(int cnt){
+	if(cnt == n){
+		for(int i=0;i<n;i++)
+			cout<<map[i]<<" ";
+		cout<<"\n";
+		return ;
+	}
+	
+	for(int i=1;i<=n;i++){
+		if(vst[i]==0){
+			map[cnt]= i;
+			vst[i]=1;
+			dfs(cnt+1);
+			vst[i]=0;
+			map[cnt]=0;
+		}
+	}
+}
+
+int main(){
+	get();
+	dfs(0);
+}
