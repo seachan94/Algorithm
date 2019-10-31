@@ -1,0 +1,46 @@
+//백준 일곱 난쟁이 2309번(재귀 함수)
+
+#include<iostream>
+#include<algorithm>
+using namespace std;
+bool flag = false;
+int arr[9];
+int get(){
+	int total=0;
+	for(int i=0;i<9;i++){
+		cin>>arr[i];
+	
+		total += arr[i];
+	}
+	sort(arr,arr+9);
+	return total;
+}
+
+void check(int cnt, int result,int q){
+	if(flag)return ;
+	if(cnt ==2){
+
+		if(result == 100){
+			for(int i=0;i<9;i++){
+				if(arr[i]!=-1)cout<<arr[i]<<"\n";
+			}
+			flag = true;
+		}
+		return ;
+		
+	}
+	for(int i=q;i<9;i++){
+		if(arr[i]!=-1){
+			int s = arr[i];
+			arr[i]=-1;
+			check(cnt+1,result-s,i+1);
+			arr[i]=s;
+		}
+	}
+}
+
+int main(){
+	int total = get();
+	check(0,total, 0);
+}
+
