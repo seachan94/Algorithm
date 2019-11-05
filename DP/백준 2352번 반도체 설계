@@ -1,0 +1,26 @@
+//백준 2352번 반도체 설계
+#include<stdio.h>
+#include<vector>
+using namespace std;
+int main(){
+    int n;
+    int arr[40001];
+    vector<int> result;
+    
+    scanf("%d",&n);
+    for(int i=0;i<n;i++){
+        scanf("%d",&arr[i]);
+    }
+    result.push_back(arr[0]);
+    for(int i=1;i<n;i++){
+        if(arr[i]>result.back()){
+            result.push_back(arr[i]);
+        }
+        else {
+            auto it = lower_bound(result.begin(),result.end(),arr[i]);
+            *it = arr[i];
+        }
+    }
+    printf("%d",result.size());
+    
+}
