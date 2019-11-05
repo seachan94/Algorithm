@@ -1,0 +1,51 @@
+//백준 10164 격자상의 경로
+
+#include<stdio.h>
+int main(){
+	int arr[16][16]={0,};
+	int dp[16][16]={0,};
+	int n;
+	int x,y;
+	scanf("%d %d %d",&x,&y,&n);
+	int cnt =1;
+	int cx=0,cy=0;
+	for(int i=0;i<x;i++){
+		for(int j=0;j<y;j++){
+			if(cnt == n){
+				cx = i;
+				cy = j;
+			}
+			cnt++;
+		}
+	}
+	dp[0][0]=1;
+	int mid=1;
+	for(int i=0;i<=cx;i++){
+		for(int j=0;j<=cy;j++){
+			if(i == 0 && j ==0)continue;
+			int nx = i-1, ny = j-1;
+			if(nx<0)nx = i;
+			if(ny<0)ny = j;
+			
+			dp[i][j]=dp[nx][j]+dp[i][ny];
+			if(i == cx && j == cy){
+				mid = dp[i][j];
+				
+			}
+		}
+	}
+	dp[cx][cy]=1;
+	for(int i=cx ;i<x;i++){
+		for(int j=cy ; j<y;j++){
+			if(i==cx && j == cy)continue;
+			int nx = i-1,ny = j-1;
+			if(nx<cx)nx = cx;
+			if(ny<cy)ny = cy;
+			dp[i][j]=dp[nx][j]+dp[i][ny];
+		}
+	}
+	
+	
+	printf("%d",dp[x-1][y-1] * mid);
+	
+}
