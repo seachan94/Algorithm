@@ -1,0 +1,29 @@
+//백준 14728 벼락 치기
+
+#include<stdio.h>
+
+int max(int a, int b){
+	if(a>b)return a;
+	else return b;
+}
+int main(){
+	int n;
+	int t;
+	int dp[10001]={0,};
+	scanf("%d %d",&n,&t);
+	int value[1001];
+	int time[1001];
+	for(int i=0;i<n;i++){
+		scanf("%d %d",&time[i],&value[i]);
+	}
+	int result=0;
+	for(int i=0;i<n;i++){
+		for(int j=t;j>=0;j--){
+			if(j-time[i]<0)continue;
+			dp[j] = max(dp[j],dp[j-time[i]]+value[i]);
+			result = max(result, dp[j]);
+		}
+	}
+
+	printf("%d",result);
+}
