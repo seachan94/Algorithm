@@ -1,0 +1,92 @@
+//백준 20055 컨베이어 벨트 위의 로봇 cpp 알고리즘
+
+#include<iostream>
+
+using namespace std;
+int inner[201] = { 0, };
+
+int robot[101] = { 0, };
+int moveinner[201] = { 0, };
+int moverobot[101] = { 0, };
+int n, k;
+
+void get() {
+	cin >> n >> k;
+	for (int i = 0;i < 2 * n;i++) {
+		cin >> inner[i];
+	}
+
+}
+
+bool checkinner() {
+	int checkk = 0;
+	for (int i = 0;i < 2 * n;i++) {
+		if (inner[i] <= 0) {
+			checkk++;
+		}
+	}
+	if (checkk >= k)
+	{
+		return false;
+	}
+	return true;
+}
+
+void checkinstart() {
+	if ( inner[0] > 0) {
+		robot[0] = 1;
+		inner[0] = inner[0] - 1;
+	}
+}
+
+void movebelt() {
+	for (int i = 0;i < (2 * n) - 1;i++) {
+		moveinner[i + 1] = inner[i];
+	}
+	moveinner[0] = inner[2 * n - 1];
+
+	for (int i = 0;i < 2 * n;i++) {
+		inner[i] = moveinner[i];
+		moveinner[i] = 0;
+	}
+
+	for (int i = 0;i < n - 1;i++) {
+		moverobot[i + 1] = robot[i];
+	}
+	moverobot[0] = 0;
+
+	for (int i = 0;i < n - 1;i++) {
+		robot[i] = moverobot[i];
+		moverobot[i] = 0;
+	}
+	robot[n - 1] = 0;
+}
+
+void dorobot() {
+	for (int i = n - 1;i >= 0;i--) {
+		
+		if (robot[i] == 1 && inner[i + 1] > 0 && robot[i + 1] == 0) {
+			robot[i + 1] = 1;
+			inner[i + 1]--;
+			robot[i] = 0;
+		}
+	}
+}
+
+int main() {
+	get();
+	int result = 0;
+
+	while (1) {
+
+		
+		movebelt();
+		dorobot();
+		checkinstart();
+		result++;
+		if (!checkinner())break;
+		
+	}
+
+	cout << result;
+}
