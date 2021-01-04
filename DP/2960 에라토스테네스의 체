@@ -1,0 +1,26 @@
+//2960 에라토스테네스의 체
+
+#include<iostream>
+using namespace std;
+
+int k, n;
+bool arr[1001] = { false, };
+
+int main() {
+	cin >> n >> k;
+
+	for (int i = 2;i <= n;i++) {
+		if (arr[i])continue;
+
+		for (int j = i; j <= n;j+=i) {
+			if (!arr[j]) {
+				arr[j] = true;
+				k--;
+				if (k == 0) {
+					cout << j;
+					return 0;
+				}
+			}
+		}
+	}
+}
