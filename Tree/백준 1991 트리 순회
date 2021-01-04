@@ -1,0 +1,50 @@
+//백준 1991 트리 순회
+#include<iostream>
+#include<vector>
+using namespace std;
+int node;
+vector<vector<int> > map;
+
+void get() {
+	cin >> node;
+	map.assign(node+1, vector<int>(2, 0));
+
+	for (int i = 0;i < node;i++) {
+		char b, c, d;
+		cin >> b >> c >> d;
+		if (c == '.')map[b - 'A' + 1][0] = 0;
+		else map[b - 'A' + 1][0] = c - 'A' + 1;
+		if (d == '.')map[b - 'A' + 1][1] = 0;
+		else map[b - 'A' + 1][1] = d - 'A' + 1;
+	}
+}
+void first(int z) {
+	if (z == 0) return;
+	cout << (char)(z + 'A' - 1);
+	first(map[z][0]);
+	first(map[z][1]);
+
+}
+void second(int z) {
+	if (z == 0) return;
+	second(map[z][0]);
+	cout << (char)(z + 'A' - 1);
+	second(map[z][1]);
+
+}
+void third(int z) {
+	if (z == 0) return;
+	third(map[z][0]);
+	third(map[z][1]);
+	cout << (char)(z + 'A' - 1);
+}
+
+int main() {
+	get();
+	first(1);
+	cout << endl;
+	
+	second(1);
+	cout << endl;
+	third(1);
+}
