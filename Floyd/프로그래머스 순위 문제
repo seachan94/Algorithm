@@ -1,0 +1,47 @@
+//프로그래머스 순위 문제
+
+#include <string>
+#include <vector>
+
+using namespace std;
+vector<vector<int> > map;
+
+void init(int n,vector<vector<int>> results){
+    map.assign(n,vector<int>(n,0));
+    for(int i=0;i<results.size();i++){
+        map[results[i][0]-1][results[i][1]-1]=1;// 이긴 사람이 있기 때문에 방향성이 존재한다고 생각
+    }
+}
+void floyd(int n){
+    for(int k=0;k<n;k++){
+        for(int i=0;i<n;i++){
+            for(int j=0;j<n;j++){
+                if(map[i][k] && map[k][j])map[i][j] = 1;
+            }
+        }
+    }
+}
+int result_(int n){
+    int ans =0;
+    bool flag;
+    for(int i=0;i<n;i++){
+        flag = false;
+        
+        for(int j=0;j<n;j++){
+            if(i==j)continue;
+            if(!map[i][j]&&!map[j][i]){
+                flag = true;
+                break;
+            }
+        }
+        if(!flag)ans++;
+    }
+    return ans;
+
+}
+
+int solution(int n, vector<vector<int>> results) {
+    init(n,results);
+    floyd(n);
+    return result_(n);
+}
