@@ -1,0 +1,53 @@
+//백준 1916 최소비용구하기
+
+#include<iostream>
+#include<vector>
+#include<queue>
+using namespace std;
+#define MAX 987654321
+int n, m;
+vector<vector<pair<int,long long> > > map;
+vector<long long> distances;
+int startnode, endnode;
+void get() {
+	cin >> n >> m;
+	distances.assign(n, MAX);
+	map.assign(n, vector<pair<int,long long > >(0,make_pair(0,0)));
+	for (int i = 0;i < m;i++) {
+		int a, b, c;
+		cin >> a >> b >> c;
+		map[a - 1].push_back(make_pair(b - 1, c));
+	}
+	cin >> startnode >> endnode;
+}
+
+void finddistance() {
+	priority_queue<pair<long long, int > > pq;
+	pq.push(make_pair(0, startnode-1));
+	distances[startnode - 1] = 0;
+	
+	while (!pq.empty()) {
+		long long curcost = -pq.top().first;
+		int curnode = pq.top().second;
+
+		pq.pop();
+		if (curcost > distances[curnode])continue;
+
+		for (int i = 0;i < map[curnode].size();i++) {
+			long long nextcost = curcost + map[curnode][i].second;
+			int nextnode = map[curnode][i].first;
+
+			if (nextcost < distances[nextnode]) {
+				pq.push(make_pair(-nextcost, nextnode));
+				distances[nextnode] = nextcost;
+			}
+
+		}
+	}
+}
+
+int main() {
+	get();
+	finddistance();
+	cout << distances[endnode - 1];
+}
