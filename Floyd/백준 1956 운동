@@ -1,0 +1,41 @@
+//백준 1956 운동
+
+#include<iostream>
+#include<vector>
+using namespace std;
+
+int v, e;
+vector<vector<long long> > arr;
+
+void get() {
+	cin >> v >> e;
+	arr.assign(v, vector<long long>(v, 987654321));
+	for (int i = 0;i < e;i++) {
+		int a, b, c;
+		cin >> a >> b >> c;
+		arr[a - 1][b - 1] = c;
+	}
+}
+
+void floyd() {
+	for (int k = 0;k < v;k++) {
+		for (int i = 0;i < v;i++) {
+			for (int j = 0;j < v;j++) {
+				if (arr[i][k] > 0 && arr[k][j] > 0 && arr[i][j] > arr[i][k]+arr[k][j]) {
+					arr[i][j] = arr[i][k] + arr[k][j];
+				}
+			}
+		}
+	}
+}
+int main() {
+
+	get();
+	floyd();
+	int result = 987654321;
+	for (int i = 0;i < v;i++) {
+		if (result > arr[i][i])result = arr[i][i];
+	}
+	if (result == 987654321)cout << -1;
+	else cout << result;
+}
