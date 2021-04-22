@@ -1,0 +1,25 @@
+#include <string>
+#include <vector>
+#include<iostream>
+using namespace std;
+
+vector<int> solution(vector<int> prices) {
+    vector<int> answer;
+    int len = prices.size();
+    answer.assign(len,0);
+    
+    for(int i=0;i<len;i++){
+        for(int j=i+1;j<len;j++){
+            if(prices[i]>prices[j]){
+                answer[i] = j-i;
+    
+                break;
+            }
+            if(j== len-1){
+                answer[i] = j-i;
+            }
+        }
+    }
+    
+    return answer;
+}
