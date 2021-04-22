@@ -1,0 +1,28 @@
+#include <string>
+#include <vector>
+#include<stack>
+#include<iostream>
+using namespace std;
+
+string solution(int n) {
+    string answer = "";
+    stack<string> map;
+    string arr[3] ={"4","1","2"};
+    bool flag = false;
+    while(n>0){
+        
+        map.push(arr[n%3]);
+        if(n%3== 0)flag = true;
+        n/=3;
+        if(flag){
+            n--;
+            flag = false;
+        }
+    }
+    while(!map.empty()){
+        answer +=map.top();
+        map.pop();
+    }
+    cout<<answer;
+    return answer;
+}
