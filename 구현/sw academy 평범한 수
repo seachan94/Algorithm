@@ -1,0 +1,59 @@
+#include<iostream>
+#include<vector>
+#include<queue>
+
+using namespace std;
+int t, n;
+vector<int> v;
+
+void init() {
+	cin >> n;
+	v.assign(n, 0);
+}
+
+void get() {
+	init();
+	for (int i = 0;i < n;i++) {
+		cin >> v[i];
+	}
+}
+
+int checkmax(int a, int b, int c) {
+	if (a > b) {
+		if (a > c)return a;
+		else return c;
+	}
+	else {
+		if (b > c)return b;
+		return c;
+	}
+}
+
+int checkmin(int a, int b, int c) {
+	if (a < b) {
+		if (a < c)return a;
+		return c;
+	}
+	else {
+		if (b < c)return b;
+		return c;
+	}
+}
+int check() {
+	bool mi = false;
+	bool ma = false;
+	int result = 0;
+	for (int i = 1;i < n - 1;i++) {
+		if (v[i] == checkmax(v[i - 1], v[i], v[i + 1]) || v[i] == checkmin(v[i - 1], v[i], v[i + 1]))continue;
+		result++;
+	}
+	return result;
+}
+
+int main() {
+	cin >> t;
+	for(int i=0;i<t;i++){
+		get();
+		cout << "#" << i+1 << " " << check() << endl;
+	}
+}
