@@ -1,0 +1,172 @@
+#include<iostream>
+#include<vector>
+#include<queue>
+
+using namespace std;
+int n, m, k;
+int dx[4] = { -1,1,0,0 }, dy[4] = { 0,0,-1,1 };
+class shark {
+public:
+
+	int x=0;
+	int y=0;
+	int d=0;
+	int sharksize = 0;
+	vector<vector<int> > sharkd;
+};
+class mapshark {
+public:
+	int sharksize;
+	int idx=0;
+	int smell=0;
+};
+vector<shark> sharks;
+vector<vector<mapshark> > map;
+int remainshark;
+int time = 0;
+void get() {
+	cin >> n >> m >> k;
+	remainshark = m;
+	mapshark a;
+	map.assign(n, vector<mapshark>(n, a));
+	shark b;
+	sharks.assign(m, b);
+	for (int i = 0;i < n;i++) {
+		for (int j = 0;j < n;j++) {
+			cin >> map[i][j].sharksize;
+			if (map[i][j].sharksize != 0) {
+				map[i][j].smell = k;
+				sharks[map[i][j].sharksize - 1].x = i;
+				sharks[map[i][j].sharksize - 1].y = j;
+				sharks[map[i][j].sharksize - 1].sharksize = map[i][j].sharksize;
+			}
+		}
+	}
+	
+	for (int i = 0;i < m;i++) {
+		cin >> sharks[i].d;
+		sharks[i].d--;
+	}
+	for (int i = 0;i < m;i++) {
+		
+		for (int j = 0;j < 4;j++) {
+			vector<int> check(4);
+			sharks[i].sharkd.push_back(check);
+			for (int k = 0;k < 4;k++) {
+				
+				cin >> sharks[i].sharkd[j][k];
+				sharks[i].sharkd[j][k] --;
+			}
+		}
+		
+	}
+
+
+}
+void removesmell() {
+	for (int i = 0;i < n;i++) {
+		for (int j = 0;j < n;j++) {
+			if (map[i][j].smell > 0) {
+				map[i][j].smell--;
+				if (map[i][j].smell == 0)map[i][j].sharksize = 0;
+			}
+			map[i][j].idx = 0;
+		}
+	}
+}
+void setshark() {
+	for (int i = 0;i < m;i++) {
+		if (sharks[i].d == -1)continue;
+		int x = sharks[i].x;
+		int y = sharks[i].y;
+		int sharksize = sharks[i].sharksize;
+		
+		if (map[x][y].idx != 0) {
+			int chsize = sharks[map[x][y].idx-1].sharksize;
+
+			if (chsize < sharksize)sharks[i].d = -1;
+			else { 
+				sharks[map[x][y].idx-1].d = -1; 
+				map[x][y].idx = i + 1;
+				map[x][y].sharksize = sharksize;
+			}
+			remainshark--;
+		}
+		
+		else {
+			map[x][y].idx = i+1;
+			map[x][y].smell = k;
+			map[x][y].sharksize = sharksize;
+		}
+	}
+}
+void print() {
+	for (int i = 0;i < n;i++) {
+		for (int j = 0;j < n;j++)cout << map[i][j].sharksize << " ";
+		cout << endl;
+	}
+}
+void move() {
+	
+	for (int i = 0;i < m;i++) {
+		int x = sharks[i].x;
+		int y = sharks[i].y;
+		int d = sharks[i].d;
+		if (d == -1)continue;
+		vector<int> checkd = sharks[i].sharkd[d];
+		bool flag = false;
+		for (int j = 0;j < 4;j++) {
+
+			
+			int nx = x + dx[checkd[j]], ny = y + dy[checkd[j]];
+			if (nx < 0 || nx >= n || ny < 0 || ny >= n)continue;
+			if (map[nx][ny].smell > 0 )continue;
+
+			sharks[i].x = nx;
+			sharks[i].y = ny;
+			sharks[i].d = checkd[j];
+			flag = true;
+			break;
+		}
+		if (!flag) {
+			
+			for (int j = 0;j < 4;j++) {
+				int nx = x + dx[checkd[j]], ny = y + dy[checkd[j]];
+				if (nx < 0 || nx >= n || ny < 0 || ny >= n)continue;
+				if (map[nx][ny].smell > 0 && map[nx][ny].sharksize != sharks[i].sharksize)continue;
+				sharks[i].x = nx;
+				sharks[i].y = ny;
+				sharks[i].d = checkd[j];
+				flag = true;
+				break;
+			}
+		}
+	}
+	
+	//cout << endl;
+	removesmell();
+	setshark();
+	//print();
+	//cout << endl;
+
+	//cout << "A";
+}
+
+int main() {
+	get();
+	bool flag = false;
+	while (1) {
+	
+		if (remainshark == 1)break;
+		if (time >= 1000) {
+		
+			flag = true;
+			break;
+		}
+		move();
+		time++;
+	}
+	if (flag)cout << -1;
+	else cout << time;
+}
+//문제 내용이 빈약한거 같은데..
