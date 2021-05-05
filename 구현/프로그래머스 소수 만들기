@@ -1,0 +1,30 @@
+#include <vector>
+#include <iostream>
+using namespace std;
+vector<bool> map;
+void get(){
+    map.assign(3000,0);
+    int check = 0;
+    for(int i=2;i<map.size();i++){
+        if(map[i])continue;
+        for(int j=i+i;j<map.size();j+=i){
+            map[j] = true;
+        }
+    }
+
+}
+int solution(vector<int> nums) {
+    int answer = 0;
+    get();
+    int sum = 0;
+    for(int i=0;i<nums.size()-2;i++){
+        for(int j=i+1;j<nums.size()-1;j++){
+            for(int k=j+1;k<nums.size();k++){
+                sum = nums[i]+nums[j]+nums[k];
+                if(!map[sum])answer++;
+            }
+        }
+        
+    }
+    return answer;
+}
