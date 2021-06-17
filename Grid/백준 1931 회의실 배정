@@ -1,0 +1,62 @@
+#include<iostream>
+#include<vector>
+#include<algorithm>
+using namespace std;
+int n;
+vector<int> s;
+vector<int> f;
+
+int finish = 0;
+int start = 0;
+
+int counts = 0;
+typedef pair<int, int> p;
+vector<p> v;
+void get() {
+	cin >> n;
+	for (int i = 0;i < n;i++) {
+		int a, b;
+		cin >> a >> b;
+		s.push_back(a);
+		f.push_back(b);
+	}
+}
+
+
+bool comp(p& a, p& b) {
+	if (a.first < b.first)return true;
+	else if (a.first == b.first) {
+		if (a.second < b.second)return true;
+	}
+	return false;
+}
+
+void check() {
+	start = v[0].second;
+	finish = v[0].first;
+	//cout << start << " " << finish << endl;
+	for (int i = 1;i < v.size();i++) {
+		if (v[i].second < finish)continue;
+		start = v[i].second;
+		finish = v[i].first;
+		counts++;
+		//cout << start << " " << finish << endl;
+	}
+}
+
+void makepair() {
+	for (int i = 0;i < s.size();i++) {
+		p a;
+		a.first = f[i];
+		a.second = s[i];
+		v.push_back(a);
+	}
+	sort(v.begin(), v.end(), comp);
+	check();
+}
+
+int main() {
+	get();
+	makepair();
+	cout << counts+1;
+}
