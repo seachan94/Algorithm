@@ -1,0 +1,41 @@
+import heapq
+def makegraph(N,road):
+    graph = [int(1e9) for i in range(N)]
+    graph = [graph.copy() for i in range(N)]
+    
+    for r in road:
+        # a node에서 b node로 가는 방법이 다양할 수 있는데 그 때 작은 결로로 선택해야 한다
+        k = min(graph[r[0]-1][r[1]-1],r[2])
+        graph[r[0]-1][r[1]-1]=  k
+        graph[r[1]-1][r[0]-1] = k
+
+    return graph
+
+def solution(N, road, K):
+    answer = 0
+    dist = [int(1e9) for x in range(N)]
+    g = makegraph(N,road)
+    q = []
+
+    heapq.heappush(q,(0,0))
+    dist[0]= 0
+    while q:
+    
+        cost, now = heapq.heappop(q)
+        cost = cost
+  
+        if cost > dist[now]:
+            continue
+
+        for i in range(N):
+            
+            nextnode = i
+            nextcost = cost+g[now][i]
+            
+            if nextcost < dist[nextnode]:
+                dist[nextnode] = nextcost
+               
+                heapq.heappush(q,(nextcost,nextnode))
+            
+  
+    return len(list(filter(lambda x : x<=K,dist)))
