@@ -1,0 +1,46 @@
+import itertools
+def solution(orders, course):
+    answer = []
+    
+    dic = dict()
+    for c in course:
+        for o in orders:
+            l = list(itertools.combinations(o,c))
+            for i in l:
+                s =""
+                for j in list(i):
+                    s+=j
+                new = ""
+                for cs in sorted(s):
+                    new+=cs
+                if new in dic.keys():
+                    dic[new]+=1
+                else:
+                    dic[new] = 1
+            
+                    
+                    
+                    
+    ls =list()
+    value = list()
+    for c in course:
+        maxs = -1
+        mid = []
+        for k,v in dic.items():
+            if len(k)==c:
+                maxs = max(maxs,v)
+                mid.append(k)
+            if len(k)>c:
+                break
+        ls.append(mid)
+        value.append(maxs)
+        
+    for c in range(len(ls)):
+        for j in range(len(ls[c])):
+            if value[c]<2:
+                break
+            if dic[ls[c][j]] == value[c]:
+                answer.append(ls[c][j])
+ 
+    answer.sort()
+    return answer
