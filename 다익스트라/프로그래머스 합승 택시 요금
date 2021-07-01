@@ -1,0 +1,51 @@
+import heapq
+def Dijkstra(start, g,n):
+    
+    dist = [int(1e9)] * n
+    q =[]
+    dist[start] = 0
+
+    heapq.heappush(q,(0,start))
+    
+    while q:
+        cost, now = heapq.heappop(q)
+        
+        if dist[now] < cost:
+            continue
+        
+        for i in range(n):
+            nextcost = cost+ g[now][i]
+            nextnode = i
+            
+            if dist[nextnode] > nextcost:
+                dist[nextnode] = nextcost
+                heapq.heappush(q,(nextcost,nextnode))
+            
+    return dist
+
+def makegraph(n,fares):
+    a =[int(1e9)] * n
+    g = [a.copy() for i in range(n)]
+    
+    for f in fares:
+        g[f[0]-1][f[1]-1] = f[2]
+        g[f[1]-1][f[0]-1] = f[2]
+    return g  
+
+def solution(n, s, a, b, fares):
+    g = makegraph(n,fares)
+    stodist = Dijkstra(s-1,g,n)
+    find = []
+
+    for i in range(n):
+        if i == s-1:
+            continue
+        find.append((i,Dijkstra(i,g,n)))
+    
+    
+    answer = stodist[a-1]+stodist[b-1]
+
+    for f in find:
+        answer = min(answer, stodist[f[0]]+f[1][a-1]+f[1][b-1])
+    
+    return answer
