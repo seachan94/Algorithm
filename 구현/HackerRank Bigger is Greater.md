@@ -1,3 +1,9 @@
+## introduce
+    풀이 방버 : next_permutation
+- 즉 비교해야 할 단어의 뒤에 위치하 단어드 중 비교 대상군 보다 큰 집합 중 가장 작은 단어르 찾아 비교군고 바꾸고 나머지 오름 차순 해주면 됨
+- next_permutation
+   
+
 ## PYTHON CODE
 
     def biggerIsGreater(w):
