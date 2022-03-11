@@ -1,0 +1,60 @@
+import java.util.*
+class Solution {
+
+
+fun solution(fees: IntArray, records: Array<String>): IntArray {
+    var answer = arrayListOf<Int>()
+    val fee = Fee(fees[0],fees[1],fees[2],fees[3])
+    val parkInfo = records.map{ it.split(" ") }
+        .groupBy { it[1] }
+
+    val carNum = parkInfo.keys
+
+    val stack = Stack<Int>()
+    val result = arrayListOf<List<String>>()
+    carNum.forEach{ num ->
+        var sumOfTime = 0
+        parkInfo[num]!!.forEach {
+            when(it[2]){
+                "IN" ->{ stack.add(it[0].toMinTime()) }
+                "OUT" ->{ sumOfTime += it[0].toMinTime() - stack.pop() }
+            }
+        }
+        if(stack.isNotEmpty()){
+            sumOfTime += "23:59".toMinTime() - stack.pop()
+        }
+        result.add(listOf(num,sumOfTime.toString()))
+    }
+
+    result.sortBy{ it[0] }
+
+    result.forEach{
+        var time = it[1].toInt()
+        var finalFee = 0
+        if( time > fee.basicTime){
+            time -= fee.basicTime
+            finalFee = fee.basicFee
+
+            finalFee += if(time%fee.perAddTime >0 ) (time/fee.perAddTime +1 )*fee.perAddFee else (time/fee.perAddTime)*fee.perAddFee
+        }else{
+            finalFee = fee.basicFee
+        }
+        answer.add(finalFee)
+    }
+    return answer.toIntArray()
+
+}
+
+  data class Fee(
+      val basicTime : Int,
+      val basicFee :Int,
+      val perAddTime : Int,
+      val perAddFee : Int
+  )
+
+  fun String.toMinTime() : Int{
+      val split =this.split(":")
+          .map{ it.toInt() }
+      return split[0]*60 + split[1]
+  }
+}
