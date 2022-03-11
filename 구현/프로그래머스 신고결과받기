@@ -1,0 +1,55 @@
+class Solution {
+    fun solution(id_list: Array<String>, report: Array<String>, k: Int): IntArray {
+
+        var answer: IntArray = IntArray(id_list.size){ 0 }
+        var usersInfo = HashMap<String,User>()
+        var needLimitUsers = mutableSetOf<String>()
+
+        id_list.map{ usersInfo[it] = User() }
+
+        report.forEach {
+            val reportInfo = it.split(" ")
+
+            if(usersInfo[reportInfo[0]]!!.reportUsers.contains(reportInfo[1])) return@forEach
+            usersInfo[reportInfo[0]]!!.reportUsers.add(reportInfo[1])
+            usersInfo[reportInfo[1]]!!.countOfReported+=1
+            if(usersInfo[reportInfo[1]]!!.countOfReported >= k) needLimitUsers.add(reportInfo[1])
+        }
+
+        id_list.forEachIndexed { idx,user->
+            needLimitUsers.forEach {
+                if(usersInfo[user]!!.reportUsers.contains(it))
+                    answer[idx]+=1
+            }
+        }
+
+        return answer
+    }
+
+    data class User(
+        var countOfReported : Int=0,
+        val reportUsers : MutableList<String> = mutableListOf(),
+        val reportMe : MutableList<String> = mutableListOf()
+    )
+    
+}
+
+
+
+//other solution
+
+
+class Solution {
+    fun solution(id_list: Array<String>, report: Array<String>, k: Int): IntArray = 
+    
+        report.map{ it.split(" ")} //arrayList [[muzi, frodo], [apeach, frodo], [frodo, neo], [muzi, neo], [apeach, muzi]]
+        .groupBy { it[1] } //LinkedHashMap {frodo=[[muzi, frodo], [apeach, frodo]], neo=[[frodo, neo], [muzi, neo]], muzi=[[apeach, muzi]]}
+        .asSequence() //CollectionsKt___CollectionsKt$asSequence$$inlined$Sequence$1
+        .map{ it.value.distinct() } //[[[muzi, frodo], [apeach, frodo]], [[frodo, neo], [muzi, neo]], [[apeach, muzi]]]
+        .filter { it.size >=k } //[[[muzi, frodo], [apeach, frodo]], [[frodo, neo], [muzi, neo]]]
+        .flatten() //[[muzi, frodo], [apeach, frodo], [frodo, neo], [muzi, neo]]
+        .map{ it[0] }//[muzi, apeach, frodo, muzi]
+        .groupingBy { it }
+        .eachCount()
+        .run{ id_list.map{ getOrDefault(it,0) }.toIntArray() }
+  }
