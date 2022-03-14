@@ -1,0 +1,93 @@
+import java.util.*
+import kotlin.collections.HashMap
+
+fun makeDividedMapByZero(map: Array<Array<Int>>, n: Int, m: Int): Array<Array<Int>> = with(map) {
+    val dx = arrayOf(0, 0, 1, -1)
+    val dy = arrayOf(-1, 1, 0, 0)
+    var count = 2
+    var queue: Queue<Pair<Int, Int>> = LinkedList()
+    for (i in 0 until n) {
+        for (j in 0 until m) {
+            if (this[i][j] != 0) continue
+            queue.add(Pair(i, j))
+            while (queue.isNotEmpty()) {
+                val x = queue.peek().first
+                val y = queue.peek().second
+                queue.poll()
+
+                this[x][y] = count
+                (0..3).forEach {
+                    val nx = x + dx[it]
+                    val ny = y + dy[it]
+                    if (nx < 0 || nx >= n || ny < 0 || ny >= m) return@forEach
+                    if (this[nx][ny] == 0) queue.add(Pair(x + dx[it], y + dy[it]))
+                }
+            }
+            count += 1
+        }
+    }
+
+    map
+}
+
+fun countMapInformation(map: Array<Array<Int>>, n: Int, m: Int): HashMap<Int, Int> =
+    map.fold(hashMapOf()) { hashmap, line ->
+
+        line.forEach {
+            if (it > 1) {
+                if (hashmap.containsKey(it)) hashmap[it] = hashmap[it]!!.plus(1)
+                else hashmap[it] = 1
+            }
+        }
+
+        hashmap
+    }
+
+fun main(args: Array<String>) = with(Scanner(System.`in`)) {
+    val n = nextInt()
+    val m = nextInt()
+    val map = Array(n) { Array(m) { 0 } }
+    for (i in 0 until n) {
+        var line = next()
+        for (j in 0 until m) {
+            map[i][j] = line[j] - '0'
+        }
+    }
+
+    val dx = arrayOf(0, 0, 1, -1)
+    val dy = arrayOf(-1, 1, 0, 0)
+
+
+    val dividedMap = makeDividedMapByZero(
+        map.map{it.copyOf()}.toTypedArray(), n, m)
+
+    val hashMapOfCount = countMapInformation(dividedMap, n, m)
+    val setOfCount = mutableSetOf<Int>()
+
+    for (i in 0 until n) {
+        for (j in 0 until m) {
+            if (dividedMap[i][j] != 1) continue
+
+            (0..3).forEach {
+                val nx = i + dx[it]
+                val ny = j + dy[it]
+                if (nx < 0 || nx >= n || ny < 0 || ny >= m) return@forEach
+                if(dividedMap[nx][ny] > 1 )setOfCount.add(dividedMap[nx][ny])
+            }
+            setOfCount.forEach {
+                map[i][j] += hashMapOfCount[it]!!
+            }
+            setOfCount.clear()
+        }
+    }
+
+    map.forEach {
+        it.forEach { m->
+            print("$m")
+        }
+        println()
+    }
+
+}
+
+//틀림
