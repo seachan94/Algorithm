@@ -1,0 +1,49 @@
+import java.io.BufferedReader
+import java.io.InputStreamReader
+import java.util.*
+
+
+data class Jewelry(
+    val weight : Int,
+    val value : Int
+) : Comparable<Jewelry>{
+    override fun compareTo(other: Jewelry) :Int {
+        if(this.weight == other.weight) return other.value - this.value
+        return this.weight - other.weight
+    }
+}
+fun main() = with(BufferedReader(InputStreamReader(System.`in`))) {
+    val br = StringTokenizer(this.readLine())
+    val n = br.nextToken().toInt()
+    val k = br.nextToken().toInt()
+    val jewelrys = mutableListOf<Jewelry>()
+    for( i in 0 until n){
+        val st = StringTokenizer(this.readLine())
+        jewelrys.add(
+            Jewelry(st.nextToken().toInt(),st.nextToken().toInt())
+        )
+    }
+    val maxWeightInBags = mutableListOf<Int>()
+    for( i in 0 until k ){
+        maxWeightInBags.add(readLine().toInt())
+    }
+    //보석 무게순 정렬
+    jewelrys.sort()
+    //가방 무게순 정렬
+    maxWeightInBags.sort()
+    //보석 가치순으로 처리할
+    val remainJewelry = PriorityQueue<Int>(reverseOrder())
+    var jewelryIdx = 0
+    var answer :Long = 0
+    maxWeightInBags.forEach{
+        while(true){
+            if(jewelryIdx >= jewelrys.size) break
+            if(jewelrys[jewelryIdx].weight > it) break
+            remainJewelry.add(jewelrys[jewelryIdx++].value)
+        }
+        if(remainJewelry.isEmpty())return@forEach
+        answer += remainJewelry.poll()
+    }
+
+    println(answer)
+}
