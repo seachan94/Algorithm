@@ -1,0 +1,29 @@
+class Solution {
+    
+
+fun isPrime(n : String) : Boolean{
+    val intN = n.toLong()
+    var i :Long= 2
+    val zero : Long = 0
+    while(i * i <= intN){
+        if(intN % i == zero) return false
+        i++
+    }
+    return true
+}
+
+fun solution(n: Int, k: Int): Int {
+
+
+    var toNotationArray = n.toString(k).split('0')
+    val answer = toNotationArray.filter{
+        it.isNotEmpty()
+    }.filter{
+        it !="1"
+    }.filter{
+        isPrime(it)
+    }.count()
+
+    return answer
+}
+}
