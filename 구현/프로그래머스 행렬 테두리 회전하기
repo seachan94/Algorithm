@@ -1,0 +1,50 @@
+class Solution {
+    
+fun makeMap(row : Int, column : Int) : Array<Array<Int>> {
+    var info = 1
+    val returnList = Array(row){ Array(column){ 0 } }
+    for( i in 0 until row){
+        for(j in 0 until column){
+            returnList[i][j] = info++
+        }
+    }
+    return returnList
+}
+
+fun solution(rows: Int, columns: Int, queries: Array<IntArray>): IntArray {
+    val answer = mutableListOf<Int>()
+    val map = makeMap(rows,columns)
+    val dx = listOf(0,1,0,-1)
+    val dy = listOf(1,0,-1,0)
+
+    queries.forEach{
+        val sx = it[0]-1
+        val sy = it[1]-1
+        val fx = it[2]-1
+        val fy = it[3]-1
+        var x = it[0]-1
+        var y = it[1]-1
+        val checkMin = mutableListOf<Int>()
+        val count = ((fx-sx) + (fy-sy))*2
+        var idx = 0
+        val checkMap = map.map { it.copyOf() }.toTypedArray()
+
+        for(i in 0 until count){
+            var nx = x+dx[idx]
+            var ny = y+dy[idx]
+            if(nx > fx || nx <sx ||ny >fy ||ny<sy){
+                idx++
+                nx = x+dx[idx]
+                ny = y+dy[idx]
+            }
+            map[nx][ny] = checkMap[x][y]
+            checkMin.add(map[nx][ny])
+            x = nx
+            y = ny
+        }
+
+        answer.add(checkMin.minOrNull()!!)
+    }
+    return answer.toIntArray()
+}
+}
