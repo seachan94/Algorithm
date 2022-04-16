@@ -1,0 +1,47 @@
+class Solution {
+    val allCase = mutableListOf<MutableList<Int>>()
+var vst = mutableListOf(0)
+
+fun setVst(size : Int){
+    vst = MutableList<Int>(size){0}
+}
+
+fun solution(k: Int, dungeons: Array<IntArray>): Int {
+    var answer: Int = -1
+    setVst(dungeons.size)
+    dfs(dungeons.size,0, mutableListOf())
+
+    for(case in allCase){
+        var rest = k
+        var count = 0
+        for( idx in case ){
+            if(rest >= dungeons[idx][0]){
+                count++
+                rest -=dungeons[idx][1]
+            }else{
+                break
+            }
+        }
+        if(answer < count) answer = count
+    }
+    return answer
+}
+
+fun dfs(size : Int, idx : Int, list : MutableList<Int>){
+    if(size == list.size){
+        allCase.add(list.map{it}.toMutableList())
+        return
+    }
+
+    for(i in 0 until size){
+        if(vst[i] == 0){
+            list.add(i)
+            vst[i] = 1
+            dfs(size,idx+1,list)
+            vst[i] = 0
+            list.removeAt(idx)
+        }
+    }
+
+}
+}
