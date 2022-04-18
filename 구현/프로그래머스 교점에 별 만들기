@@ -1,0 +1,93 @@
+#include <string>
+#include <vector>
+#include <iostream>
+using namespace std;
+
+vector<int> findStar(vector<int> first , vector<int> second){
+    vector<int> ans = {};
+    int firstx = first[0]; //a
+    int firsty = first[1]; //b
+    int firstk = -first[2]; //k
+    int secondx = second[0]; //c
+    int secondy = second[1]; //d
+    int secondk = -second[2]; //q
+
+    
+    int adbc = (firstx * secondy) - (firsty * secondx);
+    if(adbc== 0) return ans;
+
+    int findx = (firstk*secondy) + (-1 * firsty * secondk);
+    int findy = (firstk * -secondx) + (firstx * secondk);
+    
+    if(findx % adbc != 0 || findy % adbc !=0 )return ans;
+
+    ans.push_back(findx / adbc);
+    ans.push_back(findy / adbc);
+
+    return ans;
+}
+
+vector<string> solution(vector<vector<int> > line) {
+    vector<string> answer;
+    vector<vector<int> > starsPoint;
+
+    for(int i =0;i<line.size();i++){
+        for(int j=i+1;j<line.size();j++){
+            vector<int> point = findStar(line[i],line[j]);
+            if(point.size() != 0 )
+            {
+                starsPoint.push_back(point);
+            }
+        }
+    }
+
+    int findMaxX = starsPoint[0][0];
+    int findMaxY = starsPoint[0][1];
+    int findMinX = starsPoint[0][0];
+    int findMinY = starsPoint[0][1];
+
+    for(int i=1;i<starsPoint.size();i++){
+        int x = starsPoint[i][0];
+        int y = starsPoint[i][1];
+
+        if(findMaxX < x){
+            findMaxX = x;
+        }
+        if(findMinX > x){
+            findMinX = x;
+        }
+        if(findMaxY < y){
+            findMaxY = y;
+        }
+        if(findMinY >y){
+            findMinY = y;
+        }
+    }
+    int sizeX = abs(findMaxX - findMinY);
+    int sizeY = abs(findMaxY - findMinY);
+    if(sizeX == 0) sizeX = 1;
+    if(sizeY == 0) sizeY = 1;
+
+    vector<vector<char> > ans;
+    ans.assign(sizeX,vector<char>(sizeY,'.'));
+
+    for(int i=0;i<starsPoint.size();i++){
+        ans[starsPoint[i]-findMinX][starsPoint[i]-findMinY] = '*';
+    }
+    for(int i=0;i<ans.size();i++){
+        for(int j=0;j<ans[i].size();j++){
+            cout<<ans[i][j];
+        }cout<<endl;
+    }
+    return answer;
+}
+
+int main(){
+    vector<vector<int> > a = { {2, -1, 4}, {-2, -1, 4}, {0, -1, 1}, {5, -8, -12}, {5, 8, 12}};
+    vector<string> b = solution(a);
+
+    for(int i=0;i<b.size();i++){
+        cout<<b[i]<<" ";
+    }
+    
+}
